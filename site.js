@@ -42,14 +42,10 @@ function loadPage (slug) {
 	return pagedata;
 }
 
-// save page data to file ---------------------------------------------
-function savePage (data) {
-	var filename = PAGE_DIR+data.slug+'.md';
-
-	"---\n".to(filename);
-	yaml.dump(data.attributes).toEnd(filename);
-	"\n---\n".toEnd(filename);
-	data.body.toEnd(filename);
+// normalize slug -----------------------------------------------------
+function normalizeSlug (slug) {
+	slug = slug.replace(' ', '-');
+	return slug.toLowerCase();
 }
 
 // Main site API =======================================================
@@ -74,6 +70,7 @@ site.config = function (key, val) {
 	}
 }
 
+// load page data from file -------------------------------------------
 site.getPage = function (slug) {
 	var data = getBaseData();
 
@@ -90,4 +87,15 @@ site.getPage = function (slug) {
 	data.contents = md(data.contents || "Page does not exist yet");
 
 	return data;
+}
+
+// save page data to file ---------------------------------------------
+site.savePage = function (data) {
+	var slug = data.attributes.slug = normalizeSlug(data.attributes.slug);
+	var filename = PAGE_DIR+slug+'.md';
+
+	"---\n".to(filename);
+	yaml.dump(data.attributes).toEnd(filename);
+	"\n---\n".toEnd(filename);
+	data.body.toEnd(filename);
 }

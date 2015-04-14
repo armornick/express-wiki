@@ -14,9 +14,6 @@ router.get('/config/?', function(req, res) {
 
 /* POST set main configuration */
 router.post('/config/?', function (req, res) {
-	console.log('sitename: ' + req.body.sitename);
-	console.log('author: ' + req.body.author);
-
 	site.config('sitename', req.body.sitename);
 	site.config('author', req.body.author);
 
@@ -26,6 +23,25 @@ router.post('/config/?', function (req, res) {
 /* GET add page form */
 router.get('/page/add', function (req, res) {
 	res.render('admin/form-page', { title: 'Add Page', formData: {} });
+});
+
+/* POST save page to content */
+router.post('/page/add', function (req, res) {
+	if (!req.body.slug) {
+		res.render('admin/form-page', { title: 'Add Page', formData: req.body, error: 'page slug is not allowed to be empty.' });
+		return;
+	};
+
+	var data = {}; data.body = req.body.body, data.attributes = {};
+	for (var attribute in req.body) {
+		if (attribute !== 'body') {
+			data.attributes[attribute] = req.body[attribute];
+		};
+	}
+
+	site.savePage(data);
+
+	res.redirect(router.mountpath);
 });
 
 module.exports = router;

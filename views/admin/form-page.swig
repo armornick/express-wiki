@@ -1,6 +1,10 @@
 {% extends 'layout.swig' %}
 
 {% block content %}
+	{% if error %}
+	<div class="alert alert-danger" role="alert">{{ error }}</div>
+	{% endif %}
+
 	<form method="post">
 		<div class="form-group">
 			<label for="title">title: </label>
