@@ -9,7 +9,8 @@
     "marked": "^0.3.3",
     "morgan": "^1.5.1",
     "shelljs": "^0.3.0",
-    "swig": "^1.4.2"
+    "swig": "^1.4.2",
+    "yaml-js": "^0.1.0"
   },
   "scripts": {
     "start": "node bin/www"

@@ -5,9 +5,14 @@ var router = express();
 
 /* GET home page. */
 router.get('/', function(req, res, next) {
-	var themedir = site.config('theme') || 'theme';
-	console.log(themedir);
-  	res.render(themedir + '/index', { title: 'Express', sitename: site.config('sitename') });
+	var data = site.getPage('index');
+  	res.render(data.theme + '/index', data);
+});
+
+/* GET home page. */
+router.get('/page/:slug', function(req, res, next) {
+	var data = site.getPage(req.params.slug);
+  	res.render(data.theme + '/page', data);
 });
 
 module.exports = router;

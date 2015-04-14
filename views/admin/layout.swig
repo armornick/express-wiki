@@ -19,18 +19,16 @@
   </head>
   <body>
     <div class="container">
-      <div class="row">
-        <header class="page-header">
-          {% block header %}
-          <h1 class="text-center">{{ title }}</h1>
-          {% endblock %}
-        </header
-      </div>
-      <div class="row">
-        <main class="col-md-12">
-          {% block content %}{% endblock %}
-        </main>
-      </div>
+      <header class="page-header">
+        {% block header %}
+        <h1 class="text-center">{{ title }}</h1>
+        {% endblock %}
+      </header
+    </div>
+    <div class="row">
+      <main class="col-md-12">
+        {% block content %}{% endblock %}
+      </main>
     </div>
 
     <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
