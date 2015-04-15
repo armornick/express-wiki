@@ -28,7 +28,7 @@
       {{ message }}
     </div>
 
-    <p>{{ error }}</p>
+    <p>{{ error.stack }}</p>
         </div>
       </div>
     </div>

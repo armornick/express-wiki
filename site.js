@@ -1,8 +1,10 @@
 var md = require('marked'),
 	fm = require('front-matter'),
 	yaml = require('yaml-js'),
+	path = require('path'),
 	cat = require('shelljs').cat,
-	test = require('shelljs').test;
+	test = require('shelljs').test,
+	ls = require('shelljs').ls;
 
 // Constants -----------------------------------------------------------
 var SITE_DIR = 'site/';
@@ -40,6 +42,11 @@ function pageExists (slug) {
 function loadPage (slug) {
 	var pagedata = fm(cat(PAGE_DIR+slug+'.md'));
 	return pagedata;
+}
+
+// load all pages in the content directory ----------------------------
+function listPages () {
+	return ls(PAGE_DIR+'*.md');
 }
 
 // normalize slug -----------------------------------------------------
@@ -98,4 +105,19 @@ site.savePage = function (data) {
 	yaml.dump(data.attributes).toEnd(filename);
 	"\n---\n".toEnd(filename);
 	data.body.toEnd(filename);
+}
+
+// (re)build index of pages ------------------------------------------------
+site.rebuild = function () {
+	config.pages = {};
+
+	var pages = listPages();
+	pages.forEach(function (file) {
+		var slug = path.basename(file, '.md');
+		var pagedata = loadPage(slug);
+
+		config.pages[slug] = pagedata.attributes.title || 'Untitled';
+	});
+
+	saveConfiguration();
 }
