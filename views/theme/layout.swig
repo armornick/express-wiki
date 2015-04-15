@@ -21,7 +21,7 @@
     <div class="container">
       <header class="page-header">
         {% block header %}
-        <h1 class="text-center">{{ sitename }}</h1>
+        <h1 class="text-center"><a href="/">{{ sitename }}</a></h1>
         {% endblock %}
       </header
     </div>

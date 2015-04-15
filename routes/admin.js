@@ -17,7 +17,8 @@ router.post('/config/?', function (req, res) {
 	site.config('sitename', req.body.sitename);
 	site.config('author', req.body.author);
 
-	res.render('admin/config', { title: 'Administration', cfg: site.config() });
+	// res.render('admin/config', { title: 'Administration', cfg: site.config() });
+	res.redirect(router.mountpath);
 });
 
 /* GET add page form */
@@ -25,8 +26,14 @@ router.get('/page/add', function (req, res) {
 	res.render('admin/form-page', { title: 'Add Page', formData: {} });
 });
 
+/* GET add page form (with slug argument) */
+router.get('/page/add/:slug', function (req, res) {
+	var slug = req.params.slug;
+	res.render('admin/form-page', { title: 'Add Page', formData: { slug: slug } });
+});
+
 /* POST save page to content */
-router.post('/page/add', function (req, res) {
+router.post('/page/add/?*', function (req, res) {
 	if (!req.body.slug) {
 		res.render('admin/form-page', { title: 'Add Page', formData: req.body, error: 'page slug is not allowed to be empty.' });
 		return;

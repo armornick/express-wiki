@@ -20,6 +20,7 @@
 			</div>
 		</div>
 		<div class="col-md-6">
+			<p><a href="/">Visit site</a></p>
 			<h2>Current Settings</h2>
 			<p>Site name: {{ cfg.sitename }}</p>
 			<p>Author name: {{ cfg.author }}</p>

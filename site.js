@@ -84,7 +84,7 @@ site.getPage = function (slug) {
 	};
 
 	data.title = data.title || slug;
-	data.contents = md(data.contents || "Page does not exist yet");
+	data.contents = md(data.contents || "Page does not exist yet. Do you wish to [create it](/admin/page/add/"+slug+")?");
 
 	return data;
 }
