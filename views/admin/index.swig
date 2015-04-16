@@ -41,6 +41,7 @@
 			<h2>Current Settings</h2>
 			<p>Site name: {{ cfg.sitename }}</p>
 			<p>Author name: {{ cfg.author }}</p>
+			{% if cfg.theme %}<p>Theme: {{ cfg.theme }}</p>{% endif %}
 		</div>
 	</div>
 {% endblock %}

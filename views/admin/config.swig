@@ -12,6 +12,15 @@
 			<input name="author" type="text" value="{{ cfg.author }}" class="form-control">
 		</div>
 
+		<div class="form-group">
+			<label for="theme">Site theme:</label>
+			<select name="theme" class="form-control">
+			{% for theme in themes %}
+				<option value="{{ theme }}" {% if cfg.theme == theme %}selected{% endif %}>{{ theme }}</option>
+			{% endfor %}
+			</select>
+		</div>
+
 		<input type="submit" class="btn btn-default">
 	</form>
 {% endblock %}

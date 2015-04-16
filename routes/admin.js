@@ -9,15 +9,17 @@ router.get('/', function (req, res) {
 
 /* GET main configuration form */
 router.get('/config/?', function(req, res) {
-  res.render('admin/config', { title: 'Administration', path: router.mountpath, cfg: site.config() });
+	var themes = site.getThemes();
+	var cfg = site.config(); cfg.theme = cfg.theme || 'theme';
+  	res.render('admin/config', { title: 'Administration', path: router.mountpath, cfg: cfg, themes: themes });
 });
 
 /* POST set main configuration */
 router.post('/config/?', function (req, res) {
 	site.config('sitename', req.body.sitename);
 	site.config('author', req.body.author);
+	site.config('theme', req.body.theme);
 
-	// res.render('admin/config', { title: 'Administration', cfg: site.config() });
 	res.redirect(router.mountpath);
 });
 

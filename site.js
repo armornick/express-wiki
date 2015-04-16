@@ -9,6 +9,7 @@ var md = require('marked'),
 // Constants -----------------------------------------------------------
 var SITE_DIR = 'site/';
 var PAGE_DIR = SITE_DIR+'content/';
+var THEME_DIR = 'views/';
 
 // Load existing site configuration ------------------------------------
 var config = {};
@@ -81,6 +82,14 @@ site.config = function (key, val) {
 site.getPage = function (slug) {
 	var data = getBaseData();
 
+	// calculate template data
+	if (slug === 'index' && test('-f', THEME_DIR+data.theme+'/index.swig')) {
+		data.template = data.theme+'/index';
+	} else {
+		data.template = data.theme+'/page';
+	};
+
+	// load page contents and attributes
 	if (pageExists(slug)) {
 		var pagedata = loadPage(slug);
 		data.contents = pagedata.body;
@@ -120,4 +129,17 @@ site.rebuild = function () {
 	});
 
 	saveConfiguration();
+}
+
+// get list of themes (subdirectories of views dir) ------------------------
+site.getThemes = function () {
+	var themes = [];
+
+	ls(THEME_DIR).forEach(function (file) {
+		if (test('-d', THEME_DIR+file) && file !== 'admin') {
+			themes.push(path.basename(file));
+		};
+	});
+
+	return themes;
 }
