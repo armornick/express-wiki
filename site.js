@@ -2,6 +2,7 @@ var md = require('marked'),
 	fm = require('front-matter'),
 	yaml = require('yaml-js'),
 	path = require('path'),
+	sanitize = require('sanitize-filename'),
 	cat = require('shelljs').cat,
 	test = require('shelljs').test,
 	ls = require('shelljs').ls;
@@ -53,7 +54,7 @@ function listPages () {
 // normalize slug -----------------------------------------------------
 function normalizeSlug (slug) {
 	slug = slug.replace(' ', '-');
-	return slug.toLowerCase();
+	return sanitize(slug.toLowerCase());
 }
 
 // Main site API =======================================================
@@ -81,6 +82,7 @@ site.config = function (key, val) {
 // load page data from file -------------------------------------------
 site.getPage = function (slug) {
 	var data = getBaseData();
+	slug = normalizeSlug(slug);
 
 	// calculate template data
 	if (slug === 'index' && test('-f', THEME_DIR+data.theme+'/index.swig')) {
@@ -114,6 +116,9 @@ site.savePage = function (data) {
 	yaml.dump(data.attributes).toEnd(filename);
 	"\n---\n".toEnd(filename);
 	data.body.toEnd(filename);
+
+	config.pages[slug] = data.attributes.title || 'Untitled';
+	saveConfiguration();
 }
 
 // (re)build index of pages ------------------------------------------------
