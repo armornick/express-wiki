@@ -1,16 +1,20 @@
 var md = require('marked'),
 	fm = require('front-matter'),
 	yaml = require('yaml-js'),
+	swig = require('swig'),
 	path = require('path'),
 	sanitize = require('sanitize-filename'),
+	// shelljs imports
 	cat = require('shelljs').cat,
 	test = require('shelljs').test,
-	ls = require('shelljs').ls;
+	ls = require('shelljs').ls,
+	rm = require('shelljs').rm;
 
 // Constants -----------------------------------------------------------
 var SITE_DIR = 'site/';
 var PAGE_DIR = SITE_DIR+'content/';
 var THEME_DIR = 'views/';
+var MESSAGE_DIR = SITE_DIR+'defaults/';
 
 // Load existing site configuration ------------------------------------
 var config = {};
@@ -26,7 +30,7 @@ function saveConfiguration () {
 	JSON.stringify(config).to(SITE_DIR+'config.json');
 }
 
-// get base template data ----------------------------------------------
+// get base template data ----------------------------------------------------
 function getBaseData () {
 	return {
 		sitename: config.sitename,
@@ -35,33 +39,46 @@ function getBaseData () {
 	};
 }
 
-// does a page with this slug exist? ----------------------------------
+// does a page with this slug exist? -----------------------------------------
 function pageExists (slug) {
 	return test('-f', PAGE_DIR+slug+'.md');
 }
 
-// load page by slug --------------------------------------------------
+// load page by slug ---------------------------------------------------------
 function loadPage (slug) {
 	var pagedata = fm(cat(PAGE_DIR+slug+'.md'));
 	return pagedata;
 }
 
-// load all pages in the content directory ----------------------------
+// Remove page by slug ---------------------------------------------------------
+function removePage (slug) {
+	var pagefile = PAGE_DIR+slug+'.md';
+	rm(pagefile);
+}
+
+// load all pages in the content directory -----------------------------------
 function listPages () {
 	return ls(PAGE_DIR+'*.md');
 }
 
-// normalize slug -----------------------------------------------------
+// normalize slug ------------------------------------------------------------
 function normalizeSlug (slug) {
 	slug = slug.replace(' ', '-');
 	return sanitize(slug.toLowerCase());
 }
 
-// Main site API =======================================================
+// find and render default message
+function getDefault (id, data) {
+	console.log(data);
+	var source = cat(MESSAGE_DIR+id);
+	return swig.render(source, {locals: data});
+}
+
+// Main site API ==================================================================
 
 var site = module.exports = {}
 
-// get/save site configuration -----------------------------------------
+// get/save site configuration ---------------------------------------------------
 site.config = function (key, val) {
 	if (val === undefined || val === null) {
 		if (!key) {
@@ -79,7 +96,7 @@ site.config = function (key, val) {
 	}
 }
 
-// load page data from file -------------------------------------------
+// load page data from file ----------------------------------------------------
 site.getPage = function (slug) {
 	var data = getBaseData();
 	slug = normalizeSlug(slug);
@@ -102,12 +119,12 @@ site.getPage = function (slug) {
 	};
 
 	data.title = data.title || slug;
-	data.contents = md(data.contents || "Page does not exist yet. Do you wish to [create it](/admin/page/add/"+slug+")?");
+	data.contents = md(data.contents || getDefault('page_not_found', {slug: slug}));
 
 	return data;
 }
 
-// save page data to file ---------------------------------------------
+// save page data to file --------------------------------------------------
 site.savePage = function (data) {
 	var slug = data.attributes.slug = normalizeSlug(data.attributes.slug);
 	var filename = PAGE_DIR+slug+'.md';
@@ -119,6 +136,17 @@ site.savePage = function (data) {
 
 	config.pages[slug] = data.attributes.title || 'Untitled';
 	saveConfiguration();
+}
+
+// delete page data --------------------------------------------------------
+site.deletePage = function (slug) {
+	if (pageExists(slug)) {
+		removePage(slug);
+	}
+
+	if (config.pages[slug]) {
+		delete config.pages[slug];
+	};
 }
 
 // (re)build index of pages ------------------------------------------------

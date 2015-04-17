@@ -16,6 +16,11 @@
 			<input name="slug" type="text" value="{{ formData.slug }}" class="form-control">
 		</div>
 
+		<div class="form-group">
+			<label for="category">category:</small></label>
+			<input name="category" type="text" value="{{ formData.category }}" class="form-control">
+		</div>
+
 		<textarea name="body" class="form-control" rows="15">{{ formData.body }}</textarea>
 
 		<input type="submit" class="btn btn-default">

@@ -70,4 +70,11 @@ router.post('/page/add/?*', function (req, res) {
 	res.redirect(router.mountpath);
 });
 
+router.get('/page/delete/:slug', function (req, res) {
+	var slug = req.params.slug;
+	site.deletePage(slug);
+
+	res.redirect(router.mountpath+'/pages');
+});
+
 module.exports = router;
