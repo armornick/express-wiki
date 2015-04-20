@@ -2,10 +2,10 @@
 
 {% block content %}
 
-	{% for slug, title in pages %}
+	{% for slug, page in pages %}
 	<article class="row">
 		<div class="col-md-6">
-			<a href="/page/{{ slug }}"><strong>{{ slug }}</strong>: {{ title }}</a>
+			<a href="/page/{{ slug }}"><strong>{{ slug }}</strong>: {{ page.title }}</a>
 		</div>
 		<div class="col-md-6">
 			<a href="{{ path }}/page/edit/{{ slug }}" class="btn btn-default">

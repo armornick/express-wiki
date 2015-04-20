@@ -1,5 +1,9 @@
 ---
-{title: Monkey Island, slug: categorymonkey-island}
+{title: Monkey Island, slug: categorymonkey-island, category: youtube}
 
 ---
+_**The Curse of Monkey Island**_ is an [adventure game](/wiki/Adventure_game "Adventure game") developed and published by [LucasArts](/wiki/LucasArts "LucasArts"), and the third game in the _[Monkey Island](/wiki/Monkey_Island_(series) "Monkey Island (series)")_ series. It was released in [1997](/wiki/1997_in_video_gaming "1997 in video gaming") and followed the successful games _[The Secret of Monkey Island](/wiki/The_Secret_of_Monkey_Island "The Secret of Monkey Island")_ and _[Monkey Island 2: LeChuck's Revenge](/wiki/Monkey_Island_2:_LeChuck%27s_Revenge "Monkey Island 2: LeChuck's Revenge")_. The game is the twelfth and last LucasArts game to use the [SCUMM](/wiki/SCUMM "SCUMM") engine, which was extensively upgraded for its last outing before being replaced by the [GrimE](/wiki/GrimE "GrimE") engine for the next game in the series, _[Escape from Monkey Island](/wiki/Escape_from_Monkey_Island "Escape from Monkey Island")_. _The Curse of Monkey Island_ is the first _Monkey Island_ game to include [voice acting](/wiki/Voice_acting "Voice acting"), and has a more [cartoon](/wiki/Cartoon "Cartoon")-ish graphic style than the earlier games.
+
+The game's story centers on [Guybrush Threepwood](/wiki/Guybrush_Threepwood "Guybrush Threepwood"), a wannabe [pirate](/wiki/Pirate "Pirate") who must lift a [curse](/wiki/Curse "Curse") from his love [Elaine Marley](/wiki/Elaine_Marley "Elaine Marley"). As the story progresses, he must deal with a band of mysterious pirates, a rival stereotypical [French](/wiki/French_people "French people") buccaneer, a band of cutthroat smugglers, as well as his old nemesis [LeChuck](/wiki/LeChuck "LeChuck").
+
 <iframe width="420" height="315" src="https://www.youtube.com/embed/dKWT5wW4gdY" frameborder="0" allowfullscreen></iframe>

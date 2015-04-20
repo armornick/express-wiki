@@ -96,6 +96,11 @@ site.config = function (key, val) {
 	}
 }
 
+// load raw page data from file ------------------------------------------------
+site.getRawPage = function (slug) {
+	return loadPage(slug);
+}
+
 // load page data from file ----------------------------------------------------
 site.getPage = function (slug) {
 	var data = getBaseData();
@@ -134,7 +139,10 @@ site.savePage = function (data) {
 	"\n---\n".toEnd(filename);
 	data.body.toEnd(filename);
 
-	config.pages[slug] = data.attributes.title || 'Untitled';
+	config.pages[slug] = {
+		title: data.attributes.title || 'Untitled',
+		category: data.attributes.category || 'Uncategorized',
+	};
 	saveConfiguration();
 }
 
@@ -158,7 +166,10 @@ site.rebuild = function () {
 		var slug = path.basename(file, '.md');
 		var pagedata = loadPage(slug);
 
-		config.pages[slug] = pagedata.attributes.title || 'Untitled';
+		config.pages[slug] = {
+			title: pagedata.attributes.title || 'Untitled',
+			category: pagedata.attributes.category || 'Uncategorized',
+		};
 	});
 
 	saveConfiguration();

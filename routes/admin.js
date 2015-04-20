@@ -70,6 +70,35 @@ router.post('/page/add/?*', function (req, res) {
 	res.redirect(router.mountpath);
 });
 
+/* GET edit existing page form */
+router.get('/page/edit/:slug', function (req, res) {
+	var slug = req.params.slug;
+	var data = site.getRawPage(slug);
+	var formData = { body: data.body }
+
+	for (var attribute in data.attributes) {
+		formData[attribute] = data.attributes[attribute];
+	}
+
+	res.render('admin/form-page', { title: 'Edit Page '+slug, path: router.mountpath, formData: formData });
+});
+
+/* POST edit existing page */
+router.post('/page/edit/:slug', function (req, res) {
+	var data = {}; data.body = req.body.body, data.attributes = {};
+	
+	for (var attribute in req.body) {
+		if (attribute !== 'body') {
+			data.attributes[attribute] = req.body[attribute];
+		};
+	}
+
+	site.savePage(data);
+
+	res.redirect(router.mountpath+'/pages');
+});
+
+/* GET delete existing page by slug */
 router.get('/page/delete/:slug', function (req, res) {
 	var slug = req.params.slug;
 	site.deletePage(slug);

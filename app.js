@@ -28,6 +28,13 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use('/', routes);
 app.use('/admin', admin);
 
+
+// plug wikipedia into our application
+app.use('/wiki/:slug', function (req, res) {
+  res.redirect('https://en.wikipedia.org/wiki/'+req.params.slug);
+});
+
+
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
   var err = new Error('Not Found');

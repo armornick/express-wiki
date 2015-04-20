@@ -17,7 +17,7 @@
 		</div>
 
 		<div class="form-group">
-			<label for="category">category:</small></label>
+			<label for="category">category:</label>
 			<input name="category" type="text" value="{{ formData.category }}" class="form-control">
 		</div>
 
