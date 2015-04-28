@@ -7,6 +7,13 @@ router.get('/', function (req, res) {
 	res.render('admin/index', { title: 'Administration', cfg: site.config(), path: router.mountpath });
 });
 
+/* GET theme assets */
+/* example: /theme/style.css is redirected to theme-dir/assets/style.css */
+router.get('/theme/*', function (req, res, next) {
+	var file = req.params[0];
+	res.sendFile(process.cwd() + '/views/admin/assets/'+file);
+});
+
 /* GET main configuration form */
 router.get('/config/?', function(req, res) {
 	var themes = site.getThemes();
@@ -104,6 +111,18 @@ router.get('/page/delete/:slug', function (req, res) {
 	site.deletePage(slug);
 
 	res.redirect(router.mountpath+'/pages');
+});
+
+/* GET add special page form */
+router.get('/special/add', function (req, res) {
+	res.render('admin/form-special', { title: 'Add Special Page', path: router.mountpath, formData: {}, categories: site.listCategories() });
+});
+
+/* POST add special page */
+router.post('/special/add', function (req, res) {
+	console.log(req.body);
+
+	res.redirect(router.mountpath+'/');
 });
 
 module.exports = router;

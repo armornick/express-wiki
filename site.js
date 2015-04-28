@@ -96,6 +96,26 @@ site.config = function (key, val) {
 	}
 }
 
+// (re)build index of pages ------------------------------------------------
+site.rebuild = function () {
+	console.log('rebuilding site configuration')
+
+	config.pages = {};
+
+	var pages = listPages();
+	pages.forEach(function (file) {
+		var slug = path.basename(file, '.md');
+		var pagedata = loadPage(slug);
+
+		config.pages[slug] = {
+			title: pagedata.attributes.title || 'Untitled',
+			category: pagedata.attributes.category || 'Uncategorized',
+		};
+	});
+
+	saveConfiguration();
+}
+
 // load raw page data from file ------------------------------------------------
 site.getRawPage = function (slug) {
 	return loadPage(slug);
@@ -143,6 +163,7 @@ site.savePage = function (data) {
 		title: data.attributes.title || 'Untitled',
 		category: data.attributes.category || 'Uncategorized',
 	};
+	
 	saveConfiguration();
 }
 
@@ -157,22 +178,42 @@ site.deletePage = function (slug) {
 	};
 }
 
-// (re)build index of pages ------------------------------------------------
-site.rebuild = function () {
-	config.pages = {};
+// get list of pages (unparsed) for a given category -----------------------
+site.getPagesForCategory = function (category) {
+	var pagesForCategory = {};
 
-	var pages = listPages();
-	pages.forEach(function (file) {
-		var slug = path.basename(file, '.md');
-		var pagedata = loadPage(slug);
+	for (var slug in config.pages) {
+		var page = config.pages[slug];
 
-		config.pages[slug] = {
-			title: pagedata.attributes.title || 'Untitled',
-			category: pagedata.attributes.category || 'Uncategorized',
+		if (page.category == category) {
+			pagesForCategory[slug] = page;
 		};
-	});
+	}
 
-	saveConfiguration();
+	return pagesForCategory;
+}
+
+// get pages (fully parsed) for a given category ----------------------------
+site.getFullPagesForCategory = function (category) {
+	var pagesForCategory = {}, pageList = site.getPagesForCategory();
+
+	for (var slug in site.pageList) {
+		pagesForCategory[slug] = site.getPage(slug);
+	}
+
+	return pagesForCategory;
+}
+
+// get list of categories --------------------------------------------------
+site.listCategories = function () {
+	var categories = {};
+
+	for (var slug in config.pages) {
+		var page = config.pages[slug];
+		categories[page.category] = true;
+	}
+
+	return Object.keys(categories);
 }
 
 // get list of themes (subdirectories of views dir) ------------------------
@@ -187,3 +228,8 @@ site.getThemes = function () {
 
 	return themes;
 }
+
+// Site startup ==================================================================
+
+// Build page configuration on site startup --------------------------------------
+// site.rebuild(); // makes nodemon restart every time

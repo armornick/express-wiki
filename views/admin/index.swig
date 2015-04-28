@@ -17,10 +17,10 @@
 						List and edit existing pages on the site.
 					</p>
 				</a>
-				<a href="{{ path }}/page/add" class="list-group-item">
-					<h4 class="list-group-item-heading">Add New Page</h4>
+				<a href="{{ path }}/special/add" class="list-group-item">
+					<h4 class="list-group-item-heading">Add Special Page</h4>
 					<p class="list-group-item-text">
-						Add a page which can then be accessed by going to <code>/page/page-name</code>.
+						Add a page with special configuration.
 					</p>
 				</a>
 			</div>
@@ -42,6 +42,11 @@
 			<p>Site name: {{ cfg.sitename }}</p>
 			<p>Author name: {{ cfg.author }}</p>
 			{% if cfg.theme %}<p>Theme: {{ cfg.theme }}</p>{% endif %}
+
+			<h2>Quick Tasks</h2>
+			<nav>
+				<a href="{{ path }}/page/add" class="btn btn-default">Add New Page</a>
+			</nav>
 		</div>
 	</div>
 {% endblock %}
