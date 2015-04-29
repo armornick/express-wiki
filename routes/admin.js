@@ -87,7 +87,11 @@ router.get('/page/edit/:slug', function (req, res) {
 		formData[attribute] = data.attributes[attribute];
 	}
 
-	res.render('admin/form-page', { title: 'Edit Page '+slug, path: router.mountpath, formData: formData });
+	if (formData.pagetype) {
+		res.render('admin/form-special', { title: 'Edit Special Page '+slug, path: router.mountpath, formData: formData });
+	} else {
+		res.render('admin/form-page', { title: 'Edit Page '+slug, path: router.mountpath, formData: formData });
+	}
 });
 
 /* POST edit existing page */
@@ -120,7 +124,25 @@ router.get('/special/add', function (req, res) {
 
 /* POST add special page */
 router.post('/special/add', function (req, res) {
-	console.log(req.body);
+	if (!req.body.slug) {
+		res.render('admin/form-special', { title: 'Add Page', path: router.mountpath, formData: req.body, error: 'page slug is not allowed to be empty.' });
+		return;
+	} else if (req.body.pagetype == 'redirect' && !req.body.url) {
+		res.render('admin/form-special', { title: 'Add Page', path: router.mountpath, formData: req.body, error: "page type 'redirect' requires the url to be entered." });
+		return;
+	};
+
+	var data = { special: true }; 
+	data.body = req.body.body, data.attributes = {};
+	
+	for (var attribute in req.body) {
+		if (attribute !== 'body' && req.body[attribute] !== '') {
+			data.attributes[attribute] = req.body[attribute];
+		};
+	}
+
+	// console.log(data);
+	site.savePage(data);
 
 	res.redirect(router.mountpath+'/');
 });

@@ -12,6 +12,11 @@ router.get('/', function(req, res, next) {
 /* GET home page. */
 router.get('/page/:slug', function(req, res, next) {
 	var data = site.getPage(req.params.slug);
+
+	if (data.pagetype == 'redirect') {
+		res.redirect(data.url);
+	};
+
   	res.render(data.template, data);
 });
 

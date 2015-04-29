@@ -67,11 +67,16 @@ function normalizeSlug (slug) {
 	return sanitize(slug.toLowerCase());
 }
 
-// find and render default message
+// find and render default message --------------------------------------------
 function getDefault (id, data) {
 	console.log(data);
 	var source = cat(MESSAGE_DIR+id);
 	return swig.render(source, {locals: data});
+}
+
+// does a page template with the name exist? ----------------------------------
+function hasPageTemplate (theme, name) {
+	return test('-f', THEME_DIR+theme+'/'+name+'.swig');
 }
 
 // Main site API ==================================================================
@@ -110,6 +115,7 @@ site.rebuild = function () {
 		config.pages[slug] = {
 			title: pagedata.attributes.title || 'Untitled',
 			category: pagedata.attributes.category || 'Uncategorized',
+			special: (pagedata.attributes.pagetype !== undefined)
 		};
 	});
 
@@ -127,7 +133,7 @@ site.getPage = function (slug) {
 	slug = normalizeSlug(slug);
 
 	// calculate template data
-	if (slug === 'index' && test('-f', THEME_DIR+data.theme+'/index.swig')) {
+	if (slug === 'index' && hasPageTemplate(data.theme, 'index')) {
 		data.template = data.theme+'/index';
 	} else {
 		data.template = data.theme+'/page';
@@ -144,7 +150,54 @@ site.getPage = function (slug) {
 	};
 
 	data.title = data.title || slug;
-	data.contents = md(data.contents || getDefault('page_not_found', {slug: slug}));
+
+	// special page: make the modifications
+	if (config.pages[slug] && config.pages[slug].special) {
+		data.special = true;
+
+		if (hasPageTemplate(data.theme, data.pagetype)) {
+			data.template = data.theme+'/'+data.pagetype;
+		} else if (hasPageTemplate(data.theme, 'special')) {
+			data.template = data.theme+'/special';
+		};
+
+		var oldContents = data.contents;
+		delete data.contents;
+
+		if (oldContents != '') {
+			data.intro = md(oldContents);
+		}
+
+		if (data.pagetype === 'category') {
+			data.pages = site.getFullPagesForCategory(data.category);
+		};
+
+	// normal page: apply markdown or defaults
+	} else {
+
+		data.contents = md(data.contents || getDefault('page_not_found', {slug: slug}));
+
+	};
+
+	return data;
+}
+
+// get list of pages for category ------------------------------------------
+site.getCategoryPage = function (category) {
+	var data = getBaseData();
+
+	// calculate template data
+	if (slug === 'category' && hasPageTemplate(data.theme, 'category')) {
+
+		data.template = data.theme+'/category';
+		data.pages = site.getFullPagesForCategory(category);
+
+	} else {
+
+		data.template = data.theme+'/page';
+		data.contents = md(getDefault('category', {category: category, pages: site.getPagesForCategory(category)});
+
+	};
 
 	return data;
 }
@@ -162,10 +215,12 @@ site.savePage = function (data) {
 	config.pages[slug] = {
 		title: data.attributes.title || 'Untitled',
 		category: data.attributes.category || 'Uncategorized',
+		special: data.special,
 	};
 	
 	saveConfiguration();
 }
+
 
 // delete page data --------------------------------------------------------
 site.deletePage = function (slug) {
@@ -185,7 +240,7 @@ site.getPagesForCategory = function (category) {
 	for (var slug in config.pages) {
 		var page = config.pages[slug];
 
-		if (page.category == category) {
+		if (page.category == category && !page.special) {
 			pagesForCategory[slug] = page;
 		};
 	}
@@ -195,9 +250,9 @@ site.getPagesForCategory = function (category) {
 
 // get pages (fully parsed) for a given category ----------------------------
 site.getFullPagesForCategory = function (category) {
-	var pagesForCategory = {}, pageList = site.getPagesForCategory();
+	var pagesForCategory = {}, pageList = site.getPagesForCategory(category);
 
-	for (var slug in site.pageList) {
+	for (var slug in pageList) {
 		pagesForCategory[slug] = site.getPage(slug);
 	}
 
