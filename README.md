@@ -17,12 +17,18 @@ It is also possible to add pages with additional capabilities (called 'special p
 * Pages which list all posts of a certain category. Special pages in the category are not included. Optionally uses `category.swig` template.
 * A page which redirects to another url.
 
+**NOTE**: in order for everything to work properly, please don't use any javascript keyword as page slug. It is allowed, but it might break the swig templates.
+
 
 ## Theming
 
 Themes are subdirectories of the views directory and are made with the SWIG template language. Only a template with the name `page.swig` is required. Optionally, it is possible to specify an `index.swig` template for the home page or a `special.swig` template for special pages. Special pages can
 
 In the template, links pointing to `/theme` are redirected to the assets directory of the theme. This makes it possible to distribute themes as simple zip files (or folders).
+
+The templates currently also have access to the following helper functions:
+
+* getPagesForCategory: takes a category as argument, and returns all the pages in that category. Categories are case-sensitive.
 
 Themes for the admin area are not possible at the moment.
 

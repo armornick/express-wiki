@@ -36,6 +36,7 @@ function getBaseData () {
 		sitename: config.sitename,
 		author: config.author,
 		theme: config.theme || 'theme',
+		getPagesForCategory: site.getPagesForCategory,
 	};
 }
 
@@ -150,6 +151,7 @@ site.getPage = function (slug) {
 	};
 
 	data.title = data.title || slug;
+	data.category = data.category || 'Uncategorized';
 
 	// special page: make the modifications
 	if (config.pages[slug] && config.pages[slug].special) {
@@ -195,7 +197,7 @@ site.getCategoryPage = function (category) {
 	} else {
 
 		data.template = data.theme+'/page';
-		data.contents = md(getDefault('category', {category: category, pages: site.getPagesForCategory(category)});
+		data.contents = md(getDefault('category', {category: category, pages: site.getPagesForCategory(category)}));
 
 	};
 
