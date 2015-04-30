@@ -20,6 +20,12 @@ router.get('/page/:slug', function(req, res, next) {
   	res.render(data.template, data);
 });
 
+/* GET category post list page. */
+router.get('/category/:cat', function (req, res) {
+	var data = site.getCategoryPage(req.params.cat);
+	res.render(data.template, data);
+});
+
 /* GET theme assets */
 /* example: /theme/style.css is redirected to theme-dir/assets/style.css */
 router.get('/theme/*', function (req, res, next) {

@@ -37,6 +37,7 @@ function getBaseData () {
 		author: config.author,
 		theme: config.theme || 'theme',
 		getPagesForCategory: site.getPagesForCategory,
+		getCategories: site.listCategories,
 	};
 }
 
@@ -188,8 +189,10 @@ site.getPage = function (slug) {
 site.getCategoryPage = function (category) {
 	var data = getBaseData();
 
+	data.category = category;
+
 	// calculate template data
-	if (slug === 'category' && hasPageTemplate(data.theme, 'category')) {
+	if (hasPageTemplate(data.theme, 'category')) {
 
 		data.template = data.theme+'/category';
 		data.pages = site.getFullPagesForCategory(category);
@@ -242,7 +245,7 @@ site.getPagesForCategory = function (category) {
 	for (var slug in config.pages) {
 		var page = config.pages[slug];
 
-		if (page.category == category && !page.special) {
+		if (page.category.toUpperCase() == category.toUpperCase() && !page.special) {
 			pagesForCategory[slug] = page;
 		};
 	}
